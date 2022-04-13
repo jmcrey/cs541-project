@@ -1,2 +1,3 @@
-# cs541-project
-AdvPicker: Adversarial Cross-Lingual Named Entity Recognition
+# AdvPicker: Adversarial Cross-Lingual Named Entity Recognition
+
+This repository will host all the code for the CS541 Project, where I will mimic the results of the paper [AdvPicker: Effectively Leveraging Unlabeled Data via Adversarial Discriminator for Cross-Lingual NER](https://aclanthology.org/2021.acl-long.61/) by using the paper's [official repository](https://github.com/microsoft/vert-papers/tree/master/papers/AdvPicker). The goal of the paper is to improve cross-lingual Named Entity Recognition (NER) performance using an adversarial learning approach. Ultimately, they are able to obtain state-of-the-art (SOTA) performance on the CoNLL-2002 and CoNLL-2003 datasets.
