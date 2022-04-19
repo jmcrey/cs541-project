@@ -127,3 +127,11 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Official SuperGLUE
+test.jsonl
+val.jsonl
+
+# Any Outputs
+output/*
+!output/.gitkeep
