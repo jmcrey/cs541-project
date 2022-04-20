@@ -22,6 +22,13 @@ run:
 		   	   torch-gpu-service:latest --model $$model --task $$task --output $$output
 	# docker-compose -f torch-gpu.yaml run service --model $$model --task $$task --output $$output
 
+run_all:
+	docker run --rm \
+			   -v "$(shell pwd):/src" \
+			   --gpus all \
+			   --entrypoint /src/run-all.sh \
+		   	   torch-gpu-service:latest
+
 run_it:
 	docker run --rm -v "$(shell pwd):/src" --gpus all -it --entrypoint /bin/bash torch-gpu-service:latest
-	# docker-compose -f torch-gpu.yaml run --cpuset 0-15 --rm -it --entrypoint /bin/bash service
+	# docker-compose -f torch-gpu.yaml run --rm -it --entrypoint /bin/bash service
