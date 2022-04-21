@@ -5,6 +5,7 @@ declare -a TASKS=("cb" "copa" "multirc" "rte" "record" "wsc" "wic" "boolq")
 MODEL_NAME_OR_PATH="albert-xxlarge-v2"
 MODEL_TYPE="albert"
 MAX_SEQ_LENGTH=256
+EVAL_BATCH_SIZE=8
 
 for i in "${TASKS[@]}"; do
 
@@ -17,6 +18,7 @@ for i in "${TASKS[@]}"; do
         ;;
         copa)
             PATTERN_IDS="0 1"
+            EVAL_BATCH_SIZE=1
         ;;
         multirc)
             PATTERN_IDS="0 1 2 3"
@@ -28,6 +30,7 @@ for i in "${TASKS[@]}"; do
         record)
             PATTERN_IDS="0"
             MAX_SEQ_LENGTH=512
+            EVAL_BATCH_SIZE=1
         ;;
         wsc)
             PATTERN_IDS="0 1 2"
@@ -67,7 +70,7 @@ EOF
     --output_dir ${OUTPUT_DIR} \
     --do_train \
     --do_eval \
-    --pet_per_gpu_eval_batch_size 8 \
+    --pet_per_gpu_eval_batch_size ${EVAL_BATCH_SIZE} \
     --pet_per_gpu_train_batch_size 2 \
     --pet_gradient_accumulation_steps 8 \
     --pet_max_steps 250 \
