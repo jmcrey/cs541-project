@@ -9,25 +9,24 @@
 
 usage() {
 cat << EOF  
-Usage: ./run.sh -m {albert,gpt3} -t {BoolQ,CB,COPA,MultiRC,RTE,ReCoRD,WSC,WiC} -d /path/to/data -o /path/to/output -c
+Usage: ./run.sh -m {albert,gpt3} -t {BoolQ,CB,COPA,MultiRC,RTE,ReCoRD,WSC,WiC}
 Runs the training and evaluation of the SuperGLUE tasks on the specified model. Returns the results in the output directory specified.
 
     -h, --help                  Display help
     -m, --model                 The name of the model. One of {albert, gpt3}
     -t, --task                  The name of the SuperGLUE task. One of: {BoolQ, CB, COPA, MultiRC, RTE, 
                                 ReCoRD, WSC, WiC}
-    -c, --compressed            Whether or not the data directory is compressed (only supports tar.gz format)
 
 EOF
 }
 
 
-options=$(getopt -l "help,model:,task:,output-dir:,compressed" -o "hm:t:o:c" -a -- "$@")
+options=$(getopt -l "help,model:,task:" -o "hm:t:" -a -- "$@")
 TASKS="BoolQ CB COPA MultiRC RTE ReCoRD WSC WiC"
 
 # Default values
-COMPRESSED=0
 MAX_SEQ_LENGTH=256
+EVAL_BATCH_SIZE=8
 
 # To be determined
 MODEL_NAME_OR_PATH=""
@@ -74,15 +73,6 @@ while true; do
         fi
         shift
         ;;
-    -o|--output-dir)
-        shift
-        OUTPUT_DIR=$1
-        shift
-        ;;
-    -c|--compressed)
-        COMPRESSED=1
-        shift
-        ;;
     --)
         shift
         break
@@ -95,7 +85,8 @@ while true; do
 done
 
 if [ ! -z ${TASK} ] & [ ! -z ${MODEL} ]; then
-    DATA_DIR=data/${TASK}/
+    DATA_DIR="data/${TASK}/"
+    OUTPUT_DIR="output/${MODEL_TYPE}/${TASK}"
 fi
 
 
@@ -108,13 +99,14 @@ fi
 
 case $TASK in
     boolq)
-        PATTERN_IDS="3 5"
+        PATTERN_IDS="0 3 5"
     ;;
     cb)
         PATTERN_IDS="0 1 2 3 4"
     ;;
     copa)
         PATTERN_IDS="0 1"
+        EVAL_BATCH_SIZE=1
     ;;
     multirc)
         PATTERN_IDS="0 1 2 3"
@@ -126,6 +118,7 @@ case $TASK in
     record)
         PATTERN_IDS="0"
         MAX_SEQ_LENGTH=512
+        EVAL_BATCH_SIZE=1
     ;;
     wsc)
         PATTERN_IDS="0 1 2"
@@ -165,7 +158,7 @@ if [ ${TRAIN_TYPE} == "pet" ]; then
     --output_dir ${OUTPUT_DIR} \
     --do_train \
     --do_eval \
-    --pet_per_gpu_eval_batch_size 8 \
+    --pet_per_gpu_eval_batch_size ${EVAL_BATCH_SIZE} \
     --pet_per_gpu_train_batch_size 2 \
     --pet_gradient_accumulation_steps 8 \
     --pet_max_steps 250 \
@@ -190,7 +183,7 @@ elif [ ${TRAIN_TYPE} == "priming" ]; then
     --do_eval \
     --priming \
     --no-distillation \
-    --pet_per_gpu_eval_batch_size 8 \
+    --pet_per_gpu_eval_batch_size ${EVAL_BATCH_SIZE} \
     --pet_per_gpu_train_batch_size 2 \
     --pet_gradient_accumulation_steps 8 \
     --pet_max_steps 250 \

@@ -133,5 +133,8 @@ test.jsonl
 val.jsonl
 
 # Any Outputs
-output/*
 !output/.gitkeep
+!output/*/*/final/*.txt
+!output/*.txt
+output/*/*/p*
+output/*/*/*/p*

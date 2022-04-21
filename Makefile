@@ -14,13 +14,12 @@ help:
 run:
 	read -p "Which model would you like to run? [albert|gpt3]: " -r model; \
 	read -p "Which task would you like to compute? [BoolQ|CB|COPA|MultiRC|RTE|ReCoRD|WSC|WiC]: " -r task; \
-	read -p "Where would you like the model outputs? [full path]: " -r output; \
-	echo "Model: $$model, Task: $$task, Output Dir: $$output"; \
+	echo "Model: $$model, Task: $$task"; \
 	docker run --rm \
 			   -v "$(shell pwd):/src" \
 			   --gpus all \
-		   	   torch-gpu-service:latest --model $$model --task $$task --output $$output
-	# docker-compose -f torch-gpu.yaml run service --model $$model --task $$task --output $$output
+		   	   torch-gpu-service:latest --model $$model --task $$task
+	# docker-compose -f torch-gpu.yaml run service --model $$model --task $$task
 
 run_all:
 	docker run --rm \
