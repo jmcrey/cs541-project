@@ -373,11 +373,11 @@ class RecordTaskHelper(TaskHelper):
         all_candidate_labels = all_candidate_labels.permute(1, 0)
 
         total_loss = 0
-        loss_correct_label = loss_fct(prediction_scores, all_candidate_token_ids[0].view(-1))
+        loss_correct_label = loss_fct(prediction_scores, all_candidate_token_ids[0].reshape(-1))
 
         # compute hinge loss
         for candidate_token_ids, candidate_labels in zip(all_candidate_token_ids[1:], all_candidate_labels[1:]):
-            loss_wrong_label = loss_fct(prediction_scores, candidate_token_ids.view(-1))
+            loss_wrong_label = loss_fct(prediction_scores, candidate_token_ids.reshape(-1))
             hinge_loss = 1 + loss_correct_label - loss_wrong_label
             hinge_loss[hinge_loss < 0] = 0
             total_loss += hinge_loss

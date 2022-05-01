@@ -4,7 +4,7 @@ endif
 
 build:
 	docker build \
-	 -f torch-gpu.Dockerfile \
+	 -f docker/torch-gpu.Dockerfile \
 	 -t torch-gpu-service:latest \
 	 .
 
