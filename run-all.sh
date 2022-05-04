@@ -34,6 +34,7 @@ for i in "${TASKS[@]}"; do
         ;;
         wsc)
             PATTERN_IDS="0 1 2"
+            EVAL_BATCH_SIZE=1
         ;;
         wic)
             PATTERN_IDS="0 1 2"
