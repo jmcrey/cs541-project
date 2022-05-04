@@ -12,14 +12,13 @@ help:
 	docker-compose -f torch-gpu.yaml run service
 
 run:
-	read -p "Which model would you like to run? [albert|gpt3]: " -r model; \
 	read -p "Which task would you like to compute? [BoolQ|CB|COPA|MultiRC|RTE|ReCoRD|WSC|WiC]: " -r task; \
-	echo "Model: $$model, Task: $$task"; \
+	echo "Model: albert, Task: $$task"; \
 	docker run --rm \
 			   -v "$(shell pwd):/src" \
 			   --gpus all \
-		   	   torch-gpu-service:latest --model $$model --task $$task
-	# docker-compose -f torch-gpu.yaml run service --model $$model --task $$task
+		   	   torch-gpu-service:latest --model albert --task $$task
+	# docker-compose -f torch-gpu.yaml run service --model albert --task $$task
 
 run_all:
 	docker run --rm \
